@@ -1,42 +1,30 @@
-ï»¿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class IdleState : State{
+public class IdleState : BaseIA
+{
+    private float idleTime;
 
-    bool _detectedPlayer;
-
-    public State _nextState;
-
-    private Animator _animator;
-
-    private void OnEnable() {
-
-        base.onEnable();
-        _detectedPlayer = false;
-        _animator = GetComponent<Animator>();
+    public IdleState()
+    {
+        Debug.Log("IDLE INITIALIZED");
     }
 
-    void Update(){
-
-        _animator.SetBool("detectedPlayer", false);
-
+    public void Enter()
+    {
+        idleTime = Time.time;
     }
 
-    private void OnTriggerEnter(Collider collider) {
-        if (collider.gameObject.tag == "Player") {
-            _detectedPlayer = true;
-            //Debug.Log("Entrando");
+    public void Execute()
+    {
+        // Lógica do estado Idle
+        if (Time.time > idleTime + waitTime)
+        {
+            TransitionToState(State.WALK);
         }
     }
 
-    public override void CheckExit() {
-
-        if (_detectedPlayer) {
-
-            _stateMachine.ChangeState(_nextState);
-
-        }
-
+    public void Exit()
+    {
+        // Lógica de saída do estado Idle
     }
 }
