@@ -10,8 +10,6 @@ public class BaseIA : MonoBehaviour
     protected float runSpeed = 5f;
     [SerializeField]
     protected float walkSpeed = 2.5f;
-    [SerializeField]
-    private NavMeshAgent agent;
 
     [SerializeField]
     private PathPosition[] dots;
@@ -35,11 +33,9 @@ public class BaseIA : MonoBehaviour
         currentDot = 0;
 
         currentState = State.IDLE;
-        idleState = new IdleState();
-        walkState = new WalkState();
-        runState = new RunState();
-
-        agent = GetComponent<NavMeshAgent>();
+        idleState = gameObject.AddComponent<IdleState>();
+        walkState = gameObject.AddComponent<WalkState>();
+        runState = gameObject.AddComponent<RunState>();
 
         // Inicializa o estado atual
         TransitionToState(currentState);
@@ -101,38 +97,36 @@ public class BaseIA : MonoBehaviour
 
     protected void Move(float speed)
     {
-        if (agent.speed != speed)
-        {
-            agent.speed = speed;
-        }
+        this.transform.position = Vector2.MoveTowards(transform.position, dots[currentDot].position, speed * Time.deltaTime);
 
         NextPosition();
     }
 
     private void NextPosition()
-    {                    
-        currentDot += 1;            
-
-        if (currentDot >= dots.Length)
+    {  
+        if( this.transform.position == dots[currentDot].position)
         {
-            currentDot = 0;
-        }            
+            currentDot += 1;
 
-        agent.SetDestination(dots[currentDot].position);
-
-        if (dots[currentDot].IsIdlePosition())
-        {
-            TransitionToState(State.IDLE);
-        }
-        else
-        {
-            if (currentDot % 2 != 0)
+            if (currentDot >= dots.Length)
             {
-                TransitionToState(State.WALK);
+                currentDot = 0;
+            }
+
+            if (dots[currentDot].IsIdlePosition())
+            {
+                TransitionToState(State.IDLE);
             }
             else
             {
-                TransitionToState(State.RUNNING);
+                if (currentDot % 2 != 0)
+                {
+                    TransitionToState(State.WALK);
+                }
+                else
+                {
+                    TransitionToState(State.RUNNING);
+                }
             }
         }        
     }
