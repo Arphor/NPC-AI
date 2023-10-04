@@ -4,7 +4,7 @@ using UnityEngine;
 
 public abstract class State : MonoBehaviour
 {
-    public abstract void StartState(BaseIA b);
-    public abstract State RunCurrentState();
+    public abstract void StartState(BaseIA baseIA);
+    public abstract void RunCurrentState();
     public abstract void ExitState();
 }

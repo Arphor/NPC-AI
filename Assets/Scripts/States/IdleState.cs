@@ -2,25 +2,21 @@ using UnityEngine;
 
 public class IdleState : State
 {
-    public chaseState chaseState;
+    public ChaseState chaseState;
 
-    BaseIA b;
+    BaseIA baseIA;
 
-    public override void StartState(BaseIA b){
-        this.b = b;
+    public override void StartState(BaseIA baseIA)
+    {
+        this.baseIA = baseIA;
     }
 
-    public override void ExitState(){
+    public override void ExitState(){   }
 
-    }
-
-    public override State RunCurrentState(){
-        if(b.gridActive){
-            return chaseState;
-        }else{
-            return this;
+    public override void RunCurrentState(){
+        if(baseIA.gridActive)
+        {
+            baseIA.SwitchStates(chaseState);
         }
     }
-
-
 }

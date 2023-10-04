@@ -4,33 +4,33 @@ using UnityEngine;
 
 public class ReturnState : State
 {
-    public chaseState chaseState;
+    public ChaseState chaseState;
     public IdleState idleState;
 
-    Vector3 target;
+    BaseIA baseIA;
 
-    BaseIA b;
-
-    public override void StartState(BaseIA b){
-        this.b = b;
-
-        target = b.startPosition;
+    public override void StartState(BaseIA baseIA)
+    {
+        this.baseIA = baseIA;
     }
 
-    public override void ExitState(){
-        
-    }
+    public override void ExitState(){  }
 
-    public override State RunCurrentState(){
-        if(b.gridActive){
-            return chaseState;
-        }else{
-            if(b.transform.position != b.startPosition){
-                b.Move(b.startPosition);
-
-                return this;
-            }else{
-                return idleState;
+    public override void RunCurrentState()
+    {
+        if(baseIA.gridActive)
+        {
+            baseIA.SwitchStates(chaseState);
+        }
+        else
+        {
+            if(baseIA.transform.position != baseIA.startPosition)
+            {
+                baseIA.Move(baseIA.startPosition);
+            }
+            else
+            {
+                baseIA.SwitchStates(idleState);
             }
         }
     }

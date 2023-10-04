@@ -5,22 +5,19 @@ using UnityEngine;
 public class AttackState : State
 {
     public IdleState idleState;
-    public chaseState chaseState;
+    public ChaseState chaseState;
 
     GameObject player;
 
-    BaseIA b;
+    BaseIA baseIA;
 
-    public override State RunCurrentState(){
+    public override void RunCurrentState(){
         StartCoroutine(DelayAction());
-        b.collided = false;
+        baseIA.collided = false;
 
-
-
-        if(!b.collided){
-            return chaseState;
+        if(!baseIA.collided){
+            baseIA.SwitchStates(chaseState);
         }
-        return this;
 
     }
 
@@ -32,8 +29,9 @@ public class AttackState : State
     
     }
 
-    public override void StartState(BaseIA b){
-        this.b = b;
+    public override void StartState(BaseIA baseIA)
+    {
+        this.baseIA = baseIA;
         player = GameObject.FindGameObjectWithTag("Player");
     }
 

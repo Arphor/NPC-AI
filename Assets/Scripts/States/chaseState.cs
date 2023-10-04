@@ -2,36 +2,45 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class chaseState : State
+public class ChaseState : State
 {
     public IdleState idleState;
     public AttackState attackState;
     public ReturnState returnState;
 
     GameObject player;
+    BaseIA baseIA;
 
-    BaseIA b;
+    public override void RunCurrentState()
+    {
+        if(player)
+        {
+            baseIA.Move(player.transform.position);
+        }
+        else
+        {
+            baseIA.SwitchStates(returnState);
+            Debug.Log("GameOver");
+        }
 
-
-    public override State RunCurrentState(){
-        b.Move(player.transform.position);
-
-        if(b.gridActive){
-            if(b.collided){
-                return attackState;
+        if(baseIA.gridActive)
+        {
+            if(baseIA.collided)
+            {
+                baseIA.SwitchStates(attackState);
             }
-            return this;
-        }else{
-            return returnState;
+        }
+        else
+        {
+            baseIA.SwitchStates(returnState);
         }
     }
 
-    public override void StartState(BaseIA b){
-        this.b = b;
+    public override void StartState(BaseIA baseIA)
+    {
+        this.baseIA = baseIA;
         player = GameObject.FindGameObjectWithTag("Player");
     }
 
-    public override void ExitState(){
-        
-    }
+    public override void ExitState(){   }
 }

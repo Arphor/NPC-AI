@@ -17,23 +17,25 @@ public class BaseIA : MonoBehaviour
 
     public bool collided = false;
 
-
     GameObject currentGrid;
 
     public State currentState;
 
     private void RunStateMachine(){
-        State nextState = currentState?.RunCurrentState();
-
-        if (nextState != null){
-            currentState.ExitState();
-            SwitchStates(nextState);
-            currentState.StartState(this);
-        }
+        currentState.RunCurrentState();
     }
 
-    private void SwitchStates(State nextState){
-        currentState = nextState;
+    public void SwitchStates(State nextState){
+        if (nextState != null)
+        {
+            currentState.ExitState();
+            currentState = nextState;
+            currentState.StartState(this);
+        }
+        else
+        {
+            Debug.LogError("BASEIA 'NextState' NULL");
+        }
     }
     // Start is called before the first frame update
     void Start()
@@ -42,8 +44,6 @@ public class BaseIA : MonoBehaviour
         startPosition = gameObject.transform.position;
 
         currentState.StartState(this);
-
-
     }
 
     // Update is called once per frame
