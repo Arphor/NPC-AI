@@ -1,24 +1,27 @@
 using UnityEngine;
 
-public class RunState : BaseIA
+public class RunState : MonoBehaviour
 {
-    public RunState()
+    [SerializeField] private float runSpeed;
+    private BaseIA baseIA;
+
+    private void Start()
     {
-        Debug.Log("RUN INITIALIZED");
+        baseIA = GetComponent<BaseIA>();
     }
 
     public void Enter()
     {
-        // Lógica de inicialização do estado Run
+        // Lï¿½gica de inicializaï¿½ï¿½o do estado Run
     }
 
     public void Execute()
     {
-        Move(runSpeed);
+        
     }
 
     public void Exit()
     {
-        // Lógica de saída do estado Run
+        // Lï¿½gica de saï¿½da do estado Run
     }
 }

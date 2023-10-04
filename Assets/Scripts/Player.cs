@@ -35,10 +35,10 @@ public class Player : MonoBehaviour
     }
 
     public void ApplyDamage(int x){
-        health -= x;
+        health = this.health - x;
 
-        if(health < 0){
-            health = 0;
+        if(health <= 0){
+            Destroy(this.gameObject);
         }
     }
 }

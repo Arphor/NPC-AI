@@ -1,25 +1,29 @@
 using UnityEngine;
 
-public class WalkState : BaseIA
+public class WalkState : MonoBehaviour
 {
-    public WalkState()
+
+    [SerializeField] private float walkSpeed;
+    private BaseIA baseIA;
+
+    private void Start()
     {
-        Debug.Log("WALK INITIALIZED");
+        baseIA = GetComponent<BaseIA>();
     }
 
     public void Enter()
     {
-        // Lógica de inicialização do estado Walk
+        // Lï¿½gica de inicializaï¿½ï¿½o do estado Walk
     }
 
     public void Execute()
     {
-        // Lógica do estado Walk
-        Move(walkSpeed);
+        // Lï¿½gica do estado Walk
+        
     }
 
     public void Exit()
     {
-        // Lógica de saída do estado Walk
+        // Lï¿½gica de saï¿½da do estado Walk
     }
 }

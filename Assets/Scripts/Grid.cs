@@ -4,17 +4,19 @@ using UnityEngine;
 
 public class Grid : MonoBehaviour
 {
-    public int active = 0;
+    public bool active = false;
 
-    private void OnCollisionEnter2D(Collision2D other) {
+    
+
+    private void OnTriggerEnter2D(Collider2D other) {
         if(other.gameObject.tag == "Player"){
-            this.active = 1;
+            this.active = true;
         }
     }
 
-    private void OnCollisionExit2D(Collision2D other) {
+    private void OnTriggerExit2D(Collider2D other) {
         if(other.gameObject.tag == "Player"){
-            this.active = 0;
+            this.active = false;
         }
     }
 }

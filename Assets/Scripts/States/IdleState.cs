@@ -1,30 +1,18 @@
 using UnityEngine;
 
-public class IdleState : BaseIA
+public class IdleState : State
 {
-    private float idleTime;
+    public chaseState chaseState;
 
-    public IdleState()
-    {
-        Debug.Log("IDLE INITIALIZED");
-    }
-
-    public void Enter()
-    {
-        idleTime = Time.time;
-    }
-
-    public void Execute()
-    {
-        // Lógica do estado Idle
-        if (Time.time > idleTime + waitTime)
-        {
-            TransitionToState(State.WALK);
+    public override State RunCurrentState(BaseIA b){
+        if(b.gridActive){
+            return chaseState;
+        }else{
+            if(b.transform.position != b.startPosition){
+                b.Move(b.startPosition);
+            }
+            return this;
         }
     }
 
-    public void Exit()
-    {
-        // Lógica de saída do estado Idle
-    }
 }

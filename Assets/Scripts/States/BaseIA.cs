@@ -4,130 +4,68 @@ using UnityEngine.AI;
 public class BaseIA : MonoBehaviour
 {
     [SerializeField]
-    protected float waitTime = 2;    
+    protected float respawnTime = 2;    
 
     [SerializeField]
     protected float runSpeed = 5f;
     [SerializeField]
     protected float walkSpeed = 2.5f;
 
-    [SerializeField]
-    private PathPosition[] dots;
-    private int currentDot;
+    public Vector3 startPosition;
 
-    public enum State
-    {
-        IDLE,
-        WALK,
-        RUNNING
+    public bool gridActive = false;
+
+    public bool collided = false;
+
+
+    GameObject currentGrid;
+
+    public State currentState;
+
+    private void RunStateMachine(){
+        State nextState = currentState?.RunCurrentState(this);
+
+        if (nextState != null){
+            SwitchStates(nextState);
+        }
     }
 
-    private State currentState;
-    private IdleState idleState;
-    private WalkState walkState;
-    private RunState runState;
-
+    private void SwitchStates(State nextState){
+        currentState = nextState;
+    }
     // Start is called before the first frame update
     void Start()
     {
-        currentDot = 0;
+        currentGrid = transform.parent.gameObject;
+        startPosition = gameObject.transform.position;
 
-        currentState = State.IDLE;
-        idleState = gameObject.AddComponent<IdleState>();
-        walkState = gameObject.AddComponent<WalkState>();
-        runState = gameObject.AddComponent<RunState>();
 
-        // Inicializa o estado atual
-        TransitionToState(currentState);
     }
 
     // Update is called once per frame
     void Update()
     {
-        switch (currentState)
-        {
-            case State.IDLE:
-                idleState.Execute();
-                break;
-            case State.WALK:
-                walkState.Execute();
-                break;
-            case State.RUNNING:
-                runState.Execute();
-                break;
-            default:
-                idleState.Execute();
-                break;
-        }
+        gridActive = currentGrid.GetComponent<Grid>().active;
+        
+
+        RunStateMachine();
     }
 
-    protected void TransitionToState(State nextState)
+    public void Move(Vector3 target)
     {
-        switch (currentState)
-        {
-            case State.IDLE:
-                idleState.Exit();
-                break;
-            case State.WALK:
-                walkState.Exit();
-                break;
-            case State.RUNNING:
-                runState.Exit();
-                break;
-        }
+        this.transform.position = Vector2.MoveTowards(transform.position, target, walkSpeed * Time.deltaTime);
+    }
 
-        currentState = nextState;
-
-        switch (nextState)
-        {
-            case State.IDLE:
-                idleState.Enter();
-                break;
-            case State.WALK:
-                walkState.Enter();
-                break;
-            case State.RUNNING:
-                runState.Enter();
-                break;
-            default:
-                idleState.Enter();
-                break;
+    private void OnCollisionEnter2D(Collision2D collision){
+        if(collision.collider.gameObject.CompareTag("Player")){
+            collided = true;
         }
     }
 
-    protected void Move(float speed)
-    {
-        this.transform.position = Vector2.MoveTowards(transform.position, dots[currentDot].position, speed * Time.deltaTime);
+    private void OnCollisionExit2D(Collision2D collision){
 
-        NextPosition();
-    }
-
-    private void NextPosition()
-    {  
-        if( this.transform.position == dots[currentDot].position)
-        {
-            currentDot += 1;
-
-            if (currentDot >= dots.Length)
-            {
-                currentDot = 0;
-            }
-
-            if (dots[currentDot].IsIdlePosition())
-            {
-                TransitionToState(State.IDLE);
-            }
-            else
-            {
-                if (currentDot % 2 != 0)
-                {
-                    TransitionToState(State.WALK);
-                }
-                else
-                {
-                    TransitionToState(State.RUNNING);
-                }
-            }
-        }        
+        if(collision.collider.gameObject.CompareTag("Player")){
+            collided = false;
+        }
     }
 }

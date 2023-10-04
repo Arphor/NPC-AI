@@ -19,9 +19,9 @@ public class Bomb : MonoBehaviour
             foreach (Collider2D col in objectsInRange)
             {
 
-                if (col.gameObject.tag == "Player")
+                if (col.gameObject.tag == "Enemy")
                 {
-                    col.gameObject.GetComponent<Player>().ApplyDamage(damage);
+                    Destroy(col.gameObject);
                 }
             }
 
