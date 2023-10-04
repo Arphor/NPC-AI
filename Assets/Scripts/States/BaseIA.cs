@@ -23,10 +23,12 @@ public class BaseIA : MonoBehaviour
     public State currentState;
 
     private void RunStateMachine(){
-        State nextState = currentState?.RunCurrentState(this);
+        State nextState = currentState?.RunCurrentState();
 
         if (nextState != null){
+            currentState.ExitState();
             SwitchStates(nextState);
+            currentState.StartState(this);
         }
     }
 
@@ -38,6 +40,8 @@ public class BaseIA : MonoBehaviour
     {
         currentGrid = transform.parent.gameObject;
         startPosition = gameObject.transform.position;
+
+        currentState.StartState(this);
 
 
     }

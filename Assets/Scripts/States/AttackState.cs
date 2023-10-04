@@ -7,31 +7,37 @@ public class AttackState : State
     public IdleState idleState;
     public chaseState chaseState;
 
-    public override State RunCurrentState(BaseIA b){
-        Debug.Log("Attack");
+    GameObject player;
+
+    BaseIA b;
+
+    public override State RunCurrentState(){
         StartCoroutine(DelayAction());
         b.collided = false;
 
 
-        if(b.gridActive){
-            if(!b.collided){
-                return chaseState;
-            }
-            return this;
-        }else{
-            return idleState;
+
+        if(!b.collided){
+            return chaseState;
         }
+        return this;
+
     }
 
     IEnumerator DelayAction()
     {
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
         player.GetComponent<Player>().ApplyDamage(10);
 
         yield return new WaitForSeconds(2);
-
-
     
-    
+    }
+
+    public override void StartState(BaseIA b){
+        this.b = b;
+        player = GameObject.FindGameObjectWithTag("Player");
+    }
+
+    public override void ExitState(){
+        
     }
 }
