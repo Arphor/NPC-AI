@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.AI;
+using System.Collections.Generic;
 
 public class BaseIA : MonoBehaviour
 {
@@ -13,7 +14,7 @@ public class BaseIA : MonoBehaviour
 
     public Vector3 startPosition;
 
-    public bool gridActive = false;
+    public List<Grid> grids = new List<Grid>();
 
     public bool collided = false;
 
@@ -40,19 +41,19 @@ public class BaseIA : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        currentGrid = transform.parent.gameObject;
+        //currentGrid = transform.parent.gameObject;
         startPosition = gameObject.transform.position;
 
-        currentState.StartState(this);
+        //currentState.StartState(this);
     }
 
     // Update is called once per frame
     void Update()
     {
-        gridActive = currentGrid.GetComponent<Grid>().active;
+        //gridActive = currentGrid.GetComponent<Grid>().active;
         
 
-        RunStateMachine();
+        //RunStateMachine();
     }
 
     public void Move(Vector3 target)
@@ -71,5 +72,13 @@ public class BaseIA : MonoBehaviour
         if(collision.collider.gameObject.CompareTag("Player")){
             collided = false;
         }
+    }
+
+    public void addGrid(Grid g){
+        grids.Add(g);
+    }
+
+    public void removeGrid(Grid g){
+        grids.Remove(g);
     }
 }

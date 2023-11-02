@@ -14,9 +14,9 @@ public class IdleState : State
     public override void ExitState(){   }
 
     public override void RunCurrentState(){
-        if(baseIA.gridActive)
-        {
-            baseIA.SwitchStates(chaseState);
-        }
+        //if(baseIA.gridActive)
+        //{
+           // baseIA.SwitchStates(chaseState);
+        //}
     }
 }

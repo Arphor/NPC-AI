@@ -23,17 +23,17 @@ public class ChaseState : State
             Debug.Log("GameOver");
         }
 
-        if(baseIA.gridActive)
-        {
-            if(baseIA.collided)
-            {
-                baseIA.SwitchStates(attackState);
-            }
-        }
-        else
-        {
-            baseIA.SwitchStates(returnState);
-        }
+        //if(baseIA.gridActive)
+        //{
+           // if(baseIA.collided)
+            //{
+             //   baseIA.SwitchStates(attackState);
+            //}
+        //}
+        //else
+        //{
+           // baseIA.SwitchStates(returnState);
+       // }
     }
 
     public override void StartState(BaseIA baseIA)

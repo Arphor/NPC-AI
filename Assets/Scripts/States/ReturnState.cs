@@ -18,20 +18,20 @@ public class ReturnState : State
 
     public override void RunCurrentState()
     {
-        if(baseIA.gridActive)
-        {
-            baseIA.SwitchStates(chaseState);
-        }
-        else
-        {
-            if(baseIA.transform.position != baseIA.startPosition)
-            {
-                baseIA.Move(baseIA.startPosition);
-            }
-            else
-            {
-                baseIA.SwitchStates(idleState);
-            }
-        }
+        //if(baseIA.gridActive)
+        //{
+          //  baseIA.SwitchStates(chaseState);
+        //}
+        //else
+        //{
+          //  if(baseIA.transform.position != baseIA.startPosition)
+           // {
+           //     baseIA.Move(baseIA.startPosition);
+            //}
+           // else
+            //{
+             //   baseIA.SwitchStates(idleState);
+           // }
+       // }
     }
 }
