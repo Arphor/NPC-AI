@@ -12,6 +12,8 @@ public class BaseIA : MonoBehaviour
     [SerializeField]
     protected float walkSpeed = 2.5f;
 
+    protected Vector3 targetPosition;
+
     public Vector3 startPosition;
 
     public List<Grid> grids = new List<Grid>();
@@ -80,5 +82,9 @@ public class BaseIA : MonoBehaviour
 
     public void removeGrid(Grid g){
         grids.Remove(g);
+    }
+
+    public void setTargetPosition(Vector3 targetPosition){
+        this.targetPosition = targetPosition;
     }
 }
