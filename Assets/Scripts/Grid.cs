@@ -11,6 +11,7 @@ public class Grid : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D other) {
         if(other.gameObject.tag == "Player"){
             this.active = true;
+            Debug.Log("oi");
         }
 
         if(other.gameObject.tag == "Enemy"){
