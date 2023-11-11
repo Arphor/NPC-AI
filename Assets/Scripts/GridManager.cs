@@ -14,7 +14,7 @@ public class GridManager : MonoBehaviour
 
     Astar astar;
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         this.CreateGrid();
 

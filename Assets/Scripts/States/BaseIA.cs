@@ -43,18 +43,35 @@ public class BaseIA : MonoBehaviour
             Debug.LogError("BASEIA 'NextState' NULL");
         }
     }
+
+    void ReferenceLine(Vector3 start, Vector3 end){
+        Vector3 directionTarget = (start - end).normalized;
+
+        float distanceToTarget = Vector3.Distance(start, end);
+        //Physics2D.Raycast(start, directionTarget, distanceToTarget, LayerMask.GetMask("Walls"))
+        if(Physics2D.Linecast(start, end, LayerMask.GetMask("Walls"))){
+            Debug.DrawLine(start, end, Color.red, 2000);
+        }else{
+            Debug.DrawLine(start, end, Color.green, 2000);
+        }
+
+    }
     // Start is called before the first frame update
     void Start()
     {
-        //currentGrid = transform.parent.gameObject;
         startPosition = gameObject.transform.position;
 
+        //Get best path towards player
+        //Essa parte ta funcionando
         grid = GameObject.Find("Grid").GetComponent<GridManager>();
         GameObject p = GameObject.Find("Circle");
         Debug.Log(new Vector2Int(Mathf.FloorToInt(p.transform.position.x), Mathf.FloorToInt(p.transform.position.y)));
         path = grid.makePath(new Vector2Int(Mathf.FloorToInt(transform.position.x), Mathf.FloorToInt(transform.position.y)), new Vector2Int(Mathf.FloorToInt(p.transform.position.x), Mathf.FloorToInt(p.transform.position.y)));
-        //currentState.StartState(this);
 
+        ReferenceLine(this.transform.position, p.transform.position);
+        //Esse while foi só pra desenhar o caminho que ele achou
+        //E tentando que ele detectasse partes onde o objeto ia colidir com paredes devido as quinas, mas não consegui acertar aqui de jeito nenhum
+        //Por algum motivo ele ta detectando a colisão depois da quina, e não durante
         Spot pre = new Spot(Mathf.FloorToInt(transform.position.x), Mathf.FloorToInt(transform.position.y), 0);
         while(path.Count > 0){
             Spot next = path.Dequeue();
@@ -62,16 +79,18 @@ public class BaseIA : MonoBehaviour
             Vector3 origin = new Vector3(pre.X+0.5f, pre.Y+0.5f, 0);
             Vector3 target = new Vector3(next.X+0.5f, next.Y+0.5f, 0);
 
-            Vector3 directionTarget = (origin - target).normalized;
-            float distanceToTarget = Vector3.Distance(origin, target);
-            RaycastHit hit;
-            //Physics.SphereCast(origin, 2, directionTarget, out hit, distanceToTarget, LayerMask.GetMask("Walls"));
-            //Debug.Log(hit);
-            if(Physics2D.BoxCast(origin, new Vector2(0.25f, 0.25f), Vector2.Angle(new Vector2(origin.x, origin.y), new Vector2(origin.x, origin.y)), directionTarget, distanceToTarget, LayerMask.GetMask("Walls"), 0, 0)){
-                Debug.Log(Physics2D.BoxCast(origin, new Vector2(0.5f, 0.5f), Vector2.Angle(new Vector2(origin.x, origin.y), new Vector2(origin.x, origin.y)), directionTarget, distanceToTarget, LayerMask.GetMask("Walls")).collider.gameObject.name);
-                Debug.DrawLine(origin, target, Color.red, 2000);
+            if(origin.x != target.x && origin.y != target.y){
+                Vector3 origin_r = new Vector3(origin.x+0.5f, origin.y-0.5f, 0);
+                Vector3 origin_l = new Vector3(origin.x-0.5f, origin.y+0.5f, 0);
+
+                Vector3 target_r = new Vector3(target.x+0.5f, target.y-0.5f, 0);
+                Vector3 target_l = new Vector3(target.x-0.5f, target.y+0.5f, 0);
+
+                ReferenceLine(origin_r, target_r);
+                ReferenceLine(origin_l, target_l);
+                ReferenceLine(origin, target);
             }else{
-                Debug.DrawLine(origin, target, Color.green, 2000);
+                ReferenceLine(origin, target);
             }
 
             pre = next;
