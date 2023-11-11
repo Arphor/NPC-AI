@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.AI;
 using System.Collections.Generic;
+using System;
 
 public class BaseIA : MonoBehaviour
 {
@@ -20,9 +21,11 @@ public class BaseIA : MonoBehaviour
 
     public bool collided = false;
 
-    GameObject currentGrid;
+    GridManager grid;
 
     public State currentState;
+
+    Queue<Spot> path = new Queue<Spot>();
 
     private void RunStateMachine(){
         currentState.RunCurrentState();
@@ -46,14 +49,40 @@ public class BaseIA : MonoBehaviour
         //currentGrid = transform.parent.gameObject;
         startPosition = gameObject.transform.position;
 
+        grid = GameObject.Find("Grid").GetComponent<GridManager>();
+        GameObject p = GameObject.Find("Circle");
+        Debug.Log(new Vector2Int(Mathf.FloorToInt(p.transform.position.x), Mathf.FloorToInt(p.transform.position.y)));
+        path = grid.makePath(new Vector2Int(Mathf.FloorToInt(transform.position.x), Mathf.FloorToInt(transform.position.y)), new Vector2Int(Mathf.FloorToInt(p.transform.position.x), Mathf.FloorToInt(p.transform.position.y)));
         //currentState.StartState(this);
+
+        Spot pre = new Spot(Mathf.FloorToInt(transform.position.x), Mathf.FloorToInt(transform.position.y), 0);
+        while(path.Count > 0){
+            Spot next = path.Dequeue();
+
+            Vector3 origin = new Vector3(pre.X+0.5f, pre.Y+0.5f, 0);
+            Vector3 target = new Vector3(next.X+0.5f, next.Y+0.5f, 0);
+
+            Vector3 directionTarget = (origin - target).normalized;
+            float distanceToTarget = Vector3.Distance(origin, target);
+            RaycastHit hit;
+            //Physics.SphereCast(origin, 2, directionTarget, out hit, distanceToTarget, LayerMask.GetMask("Walls"));
+            //Debug.Log(hit);
+            if(Physics2D.BoxCast(origin, new Vector2(0.25f, 0.25f), Vector2.Angle(new Vector2(origin.x, origin.y), new Vector2(origin.x, origin.y)), directionTarget, distanceToTarget, LayerMask.GetMask("Walls"), 0, 0)){
+                Debug.Log(Physics2D.BoxCast(origin, new Vector2(0.5f, 0.5f), Vector2.Angle(new Vector2(origin.x, origin.y), new Vector2(origin.x, origin.y)), directionTarget, distanceToTarget, LayerMask.GetMask("Walls")).collider.gameObject.name);
+                Debug.DrawLine(origin, target, Color.red, 2000);
+            }else{
+                Debug.DrawLine(origin, target, Color.green, 2000);
+            }
+
+            pre = next;
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
+
         //gridActive = currentGrid.GetComponent<Grid>().active;
-        
 
         //RunStateMachine();
     }
@@ -77,7 +106,9 @@ public class BaseIA : MonoBehaviour
     }
 
     public void addGrid(Grid g){
-        grids.Add(g);
+        if(!grids.Contains(g)){
+            grids.Add(g);
+        }
     }
 
     public void removeGrid(Grid g){

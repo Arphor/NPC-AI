@@ -6,14 +6,14 @@ public class LookNode : Node
 {
     Transform currentPosition;
     float visionRange;
-    LayerMask targetMask;
-    LayerMask obstructionMask;
+    public LayerMask targetMask;
+    public LayerMask obstructionMask;
 
     public LookNode(Transform currentPosition, float visionRange, LayerMask targetMask, LayerMask obstructionMask){
         this.currentPosition = currentPosition;
         this.visionRange = visionRange;
-        this.targetMask = targetMask;
-        this.obstructionMask = obstructionMask;
+        this.targetMask = LayerMask.GetMask("Player");
+        this.obstructionMask = LayerMask.GetMask("Walls");
     }
 
     public override NodeState Evaluate(){
