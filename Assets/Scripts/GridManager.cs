@@ -40,10 +40,9 @@ public class GridManager : MonoBehaviour
         }
     }
 
-    public Queue<Spot> makePath(Vector2Int start, Vector2Int end){
+    public List<Spot> makePath(Vector2Int start, Vector2Int end){
 
-        Queue<Spot> queue = new Queue<Spot>(astar.CreatePath(spots, end, start, 1000));
-        return queue;
+        return astar.CreatePath(spots, end, start, 1000);
     }
 
 }

@@ -13,10 +13,12 @@ public class IsIdleNode : Node
     public override NodeState Evaluate(){
         foreach(var g in ia.grids){
             if(g.active){
-                return NodeState.SUCCESS;
+                Debug.Log("Active");
+                return NodeState.FAILURE;
             }
         }
-        return NodeState.FAILURE;
+        Debug.Log("Idle");
+        return NodeState.SUCCESS;
     }
 
 }

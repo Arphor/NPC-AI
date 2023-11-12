@@ -13,9 +13,9 @@ public class BaseIA : MonoBehaviour
     [SerializeField]
     protected float walkSpeed = 2.5f;
 
-    protected Vector3 targetPosition;
-
+    public Vector3 targetPosition;
     public Vector3 startPosition;
+    public Vector3 walkingTo;
 
     public List<Grid> grids = new List<Grid>();
 
@@ -25,7 +25,9 @@ public class BaseIA : MonoBehaviour
 
     public State currentState;
 
-    Queue<Spot> path = new Queue<Spot>();
+    public List<Spot> path = new List<Spot>();
+
+    Node TreeRoot;
 
     private void RunStateMachine(){
         currentState.RunCurrentState();
@@ -64,43 +66,58 @@ public class BaseIA : MonoBehaviour
         //Get best path towards player
         //Essa parte ta funcionando
         grid = GameObject.Find("Grid").GetComponent<GridManager>();
-        GameObject p = GameObject.Find("Circle");
-        Debug.Log(new Vector2Int(Mathf.FloorToInt(p.transform.position.x), Mathf.FloorToInt(p.transform.position.y)));
-        path = grid.makePath(new Vector2Int(Mathf.FloorToInt(transform.position.x), Mathf.FloorToInt(transform.position.y)), new Vector2Int(Mathf.FloorToInt(p.transform.position.x), Mathf.FloorToInt(p.transform.position.y)));
 
-        ReferenceLine(this.transform.position, p.transform.position);
-        //Esse while foi só pra desenhar o caminho que ele achou
-        //E tentando que ele detectasse partes onde o objeto ia colidir com paredes devido as quinas, mas não consegui acertar aqui de jeito nenhum
-        //Por algum motivo ele ta detectando a colisão depois da quina, e não durante
-        Spot pre = new Spot(Mathf.FloorToInt(transform.position.x), Mathf.FloorToInt(transform.position.y), 0);
-        while(path.Count > 0){
-            Spot next = path.Dequeue();
+        this.ConstructTree();
+    
 
-            Vector3 origin = new Vector3(pre.X+0.5f, pre.Y+0.5f, 0);
-            Vector3 target = new Vector3(next.X+0.5f, next.Y+0.5f, 0);
+    }
 
-            if(origin.x != target.x && origin.y != target.y){
-                Vector3 origin_r = new Vector3(origin.x+0.5f, origin.y-0.5f, 0);
-                Vector3 origin_l = new Vector3(origin.x-0.5f, origin.y+0.5f, 0);
+    void ConstructTree(){
 
-                Vector3 target_r = new Vector3(target.x+0.5f, target.y-0.5f, 0);
-                Vector3 target_l = new Vector3(target.x-0.5f, target.y+0.5f, 0);
+        //Leafs
+        IsIdleNode isIdle = new IsIdleNode(this);
+        Inverter InverterIsIdle = new Inverter(isIdle);
 
-                ReferenceLine(origin_r, target_r);
-                ReferenceLine(origin_l, target_l);
-                ReferenceLine(origin, target);
-            }else{
-                ReferenceLine(origin, target);
-            }
+        LookNode seePlayer = new LookNode(this.transform, 4);
+        TargetPlayerNode targetPlayer = new TargetPlayerNode(this);
 
-            pre = next;
-        }
+        TargetPatrolNode targetPatrol = new TargetPatrolNode(this.grids, this);
+
+        AtStartPoint atStartPosition = new AtStartPoint(this.transform, startPosition);
+        Inverter InverterAtStart = new Inverter(atStartPosition);
+        TargetStart targetStart = new TargetStart(this, startPosition);
+
+        PathReadyNode pathReady = new PathReadyNode(this);
+
+        MakePathNode makePath = new MakePathNode(grid, this);
+        
+        TempStepNode step = new TempStepNode(this.transform, this, walkSpeed);
+
+
+        //Parent Nodes
+        Sequence Chasing = new Sequence(new List<Node> {seePlayer, targetPlayer});
+        Selection Act = new Selection(new List<Node> {Chasing, targetPatrol});
+
+        Sequence Active = new Sequence(new List<Node> {InverterIsIdle, Act});
+
+
+        Sequence Return = new Sequence(new List<Node> {InverterAtStart, targetStart});
+
+        Selection FindMovement = new Selection(new List<Node> {Active, Return});
+
+
+        Selection Pathing = new Selection(new List<Node> {pathReady, makePath});
+
+        Sequence Move = new Sequence(new List<Node> {Pathing, step});
+
+        TreeRoot = new Sequence(new List<Node> {FindMovement, Move});
+
     }
 
     // Update is called once per frame
     void Update()
     {
-
+        TreeRoot.Evaluate();
         //gridActive = currentGrid.GetComponent<Grid>().active;
 
         //RunStateMachine();
@@ -136,5 +153,9 @@ public class BaseIA : MonoBehaviour
 
     public void setTargetPosition(Vector3 targetPosition){
         this.targetPosition = targetPosition;
+    }
+
+    public void setPath(List<Spot> path){
+        this.path = path;
     }
 }

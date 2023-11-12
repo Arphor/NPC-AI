@@ -86,7 +86,6 @@ public class Astar
                 {
                     Path.RemoveRange(0, (Path.Count - 1) - length);
                 }
-                Debug.Log("oi");
                 return Path;
             }
 

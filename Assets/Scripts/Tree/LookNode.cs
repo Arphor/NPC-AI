@@ -9,7 +9,7 @@ public class LookNode : Node
     public LayerMask targetMask;
     public LayerMask obstructionMask;
 
-    public LookNode(Transform currentPosition, float visionRange, LayerMask targetMask, LayerMask obstructionMask){
+    public LookNode(Transform currentPosition, float visionRange){
         this.currentPosition = currentPosition;
         this.visionRange = visionRange;
         this.targetMask = LayerMask.GetMask("Player");
