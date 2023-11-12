@@ -25,12 +25,7 @@ public class GridManager : MonoBehaviour
         walls.CompressBounds();
         bounds = walls.cellBounds;
 
-        Vector3 tileMapCenter = bounds.position;
-        Vector3 tileMapExtents = bounds.size;
 
-        Vector3 topbound = new Vector3(tileMapCenter.x, tileMapCenter.y + tileMapExtents.y, tileMapCenter.z);
-
-        Vector3 rightbound = new Vector3(tileMapCenter.x + tileMapExtents.x, tileMapCenter.y, tileMapCenter.z);
 
         spots = new Vector3Int[bounds.size.x, bounds.size.y];
 
