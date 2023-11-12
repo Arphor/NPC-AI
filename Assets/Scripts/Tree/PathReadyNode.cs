@@ -16,7 +16,10 @@ public class PathReadyNode : Node
     public override NodeState Evaluate(){
 
         if(ia.path.Count > 0){
-            return NodeState.SUCCESS;
+            if(ia.walkingTo != Vector3.zero)
+                if(ia.walkingTo == ia.targetPosition){
+                    return NodeState.SUCCESS;
+                }
         }
 
         return NodeState.FAILURE;

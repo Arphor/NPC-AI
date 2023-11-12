@@ -13,9 +13,9 @@ public class BaseIA : MonoBehaviour
     [SerializeField]
     protected float walkSpeed = 2.5f;
 
-    public Vector3 targetPosition;
-    public Vector3 startPosition;
-    public Vector3 walkingTo;
+    public Vector3 targetPosition = Vector3.zero;
+    public Vector3 startPosition = Vector3.zero;
+    public Vector3 walkingTo = Vector3.zero;
 
     public List<Grid> grids = new List<Grid>();
 
@@ -65,6 +65,7 @@ public class BaseIA : MonoBehaviour
         gameObject.transform.position = pos;
 
         this.startPosition = pos;
+        this.walkingTo = pos;
 
         //Get best path towards player
         //Essa parte ta funcionando
@@ -81,7 +82,7 @@ public class BaseIA : MonoBehaviour
         IsIdleNode isIdle = new IsIdleNode(this);
         Inverter InverterIsIdle = new Inverter(isIdle);
 
-        LookNode seePlayer = new LookNode(this.transform, 4);
+        LookNode seePlayer = new LookNode(this.transform, 10);
         TargetPlayerNode targetPlayer = new TargetPlayerNode(this);
 
         TargetPatrolNode targetPatrol = new TargetPatrolNode(this.grids, this);

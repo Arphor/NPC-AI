@@ -13,11 +13,9 @@ public class IsIdleNode : Node
     public override NodeState Evaluate(){
         foreach(var g in ia.grids){
             if(g.active){
-                Debug.Log("Active");
                 return NodeState.FAILURE;
             }
         }
-        Debug.Log("Idle");
         return NodeState.SUCCESS;
     }
 

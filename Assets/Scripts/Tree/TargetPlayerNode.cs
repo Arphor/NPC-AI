@@ -11,6 +11,7 @@ public class TargetPlayerNode : Node
     }
 
     public override NodeState Evaluate(){
+        Debug.Log("Chasing");
         ia.setTargetPosition(GameObject.FindWithTag("Player").transform.position);
 
         return NodeState.SUCCESS;

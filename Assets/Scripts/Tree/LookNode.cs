@@ -17,15 +17,17 @@ public class LookNode : Node
     }
 
     public override NodeState Evaluate(){
-        Collider[] rangeChecks = Physics.OverlapSphere(currentPosition.position, visionRange, targetMask);
+        Collider2D[] rangeChecks = Physics2D.OverlapCircleAll(currentPosition.position, visionRange, targetMask);
+        Debug.Log("Seaching");
 
         if(rangeChecks.Length != 0){
+            Debug.Log("Acho que eu vi um gatinho");
             Transform target = rangeChecks[0].transform;
             Vector3 directionTarget = (target.position - currentPosition.position).normalized;
 
             float distanceToTarget = Vector3.Distance(currentPosition.position, target.position);
 
-            if(!Physics.Raycast(currentPosition.position, directionTarget, distanceToTarget, obstructionMask)){
+            if(!Physics2D.Raycast(currentPosition.position, directionTarget, distanceToTarget, obstructionMask)){
                 return NodeState.SUCCESS;
             }
         }
