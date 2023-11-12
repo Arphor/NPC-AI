@@ -13,7 +13,7 @@ public class AtStartPoint : Node
     }
 
     public override NodeState Evaluate(){
-
+        Debug.Log((currentPosition.position == startPosition) + " " + currentPosition.position + " " + startPosition);
         return currentPosition.position == startPosition ? NodeState.SUCCESS : NodeState.FAILURE;
 
     }

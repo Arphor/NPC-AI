@@ -61,7 +61,10 @@ public class BaseIA : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        startPosition = gameObject.transform.position;
+        Vector3 pos = new Vector3(Mathf.FloorToInt(gameObject.transform.position.x) + 0.5f, Mathf.FloorToInt(gameObject.transform.position.y) + 0.5f, 0);
+        gameObject.transform.position = pos;
+
+        this.startPosition = pos;
 
         //Get best path towards player
         //Essa parte ta funcionando

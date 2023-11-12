@@ -17,13 +17,14 @@ public class TargetPatrolNode : Node
 
     public override NodeState Evaluate(){
 
+
         Vector3 point = grids[0].randomPoint();
-        while(Physics2D.OverlapPoint(new Vector2(point.x, point.y), LayerMask.GetMask("Walls")) ){
+        while(Physics2D.OverlapPoint(new Vector2(point.x, point.y), LayerMask.GetMask("Walls"))){
             point = grids[0].randomPoint();
         }
 
         ia.setTargetPosition(point);
-        //lastPatrol = point;
+        lastPatrol = point;
 
         return NodeState.SUCCESS;
 
