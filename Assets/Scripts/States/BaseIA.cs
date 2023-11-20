@@ -56,7 +56,6 @@ public class BaseIA : MonoBehaviour
         }else{
             Debug.DrawLine(start, end, Color.green, 2000);
         }
-
     }
     // Start is called before the first frame update
     void Start()

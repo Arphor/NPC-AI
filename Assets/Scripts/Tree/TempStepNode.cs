@@ -16,17 +16,15 @@ public class TempStepNode : Node
         this.walkSpeed = walkSpeed;
     }
 
-    public override NodeState Evaluate(){
-
-
+    public override NodeState Evaluate()
+    {
         try
         {
 
-            if(ia.path == null)
+            if(ia.path == null || ia.path.Count == 0)
             {
                 return NodeState.FAILURE;
             }
-
 
             List<Spot> spots = ia.path;
 
