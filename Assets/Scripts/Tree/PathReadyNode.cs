@@ -17,11 +17,14 @@ public class PathReadyNode : Node
 
         if(ia.path.Count > 0){
             if(ia.walkingTo != Vector3.zero)
+            {
                 if(ia.walkingTo == ia.targetPosition){
                     return NodeState.SUCCESS;
                 }
+                return NodeState.FAILURE;
+            }
+            return NodeState.FAILURE;
         }
-
         return NodeState.FAILURE;
 
     }

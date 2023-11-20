@@ -183,14 +183,16 @@ public class Spot
             Neighboors.Add(grid[x, y + 1]);
         if (y > 0)
             Neighboors.Add(grid[x, y - 1]);
-        if (x > 0 && y > 0)
+
+        //TODO: BUG FIX DIAGONAL PASS THROUGH WALLS
+        /*if (x > 0 && y > 0)
             Neighboors.Add(grid[x - 1, y - 1]);
         if (x < grid.GetUpperBound(0) - 1 && Y > 0)
             Neighboors.Add(grid[x + 1, y - 1]);
         if (x > 0 && y < grid.GetUpperBound(1))
             Neighboors.Add(grid[x - 1, y + 1]);
         if (x < grid.GetUpperBound(0) && y < grid.GetUpperBound(1))
-            Neighboors.Add(grid[x + 1, y + 1]);
+            Neighboors.Add(grid[x + 1, y + 1]);*/
     }
 
 

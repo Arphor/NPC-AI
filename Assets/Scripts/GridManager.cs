@@ -25,8 +25,6 @@ public class GridManager : MonoBehaviour
         walls.CompressBounds();
         bounds = walls.cellBounds;
 
-
-
         spots = new Vector3Int[bounds.size.x, bounds.size.y];
 
         for (int x = bounds.xMin, i = 0; i < (bounds.size.x); x++, i++){
